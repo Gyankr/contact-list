@@ -90,3 +90,12 @@ relative link=> when  we said the path is root/css/home.css ==> href="./css/home
 it will go to assets it will search for css..similar for js and images
 
 it will go there search the file and give it 
+
+***********************************connecting to the mongo db************************************************************
+    install mongodb( only once)
+npm install mongoose(in every package)
+
+/*express js will be able to intract with the mongodb with the help of layber between called mongoose*/
+we need to create another folder inside contact list and we call it 
+****(folder) ==>config
+and file indside it called ==>mongoose.js

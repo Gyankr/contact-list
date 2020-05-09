@@ -1,6 +1,10 @@
 const express = require('express');/*importing express*/
 const path = require('path');/*path is an inbuilt module in node*/
 const port = 8000;
+
+/*includ.require the mongoose.js file when the server is firing up*/
+const db = require('./config/mongoose');
+
 const app = express();
 /*the express app will be fired using this command*/
 /*This app has all the functionality
