@@ -1,0 +1,28 @@
+<%/*its extension is not html and ejs because the templet engine defines that we 
+need to put this extension so that it can read through find those aligator mouth
+and percentage % and execute the java script inside*/%>
+<html>
+    <head>
+        <title>
+            <%=locals.title%> <%/*this is rendering the title from the index.js return res.render('home',{title: "My contact list"})>*/%>
+        </title>
+        <style>
+            body{
+                color: rgb(15, 139, 92);
+                text-align: center;
+            }
+           </style>
+    </head>
+    <body>
+        <ul>
+            <li>
+                <h1>I Fly</h1>
+                <p>In an Iron Suit</p>
+            </li>
+            <li>
+                <h1> I Shoot Missiles</h1>
+                <p>It's not the Jerischo, is it?</p>
+            </li>
+        </ul>
+    </body>
+</html>

@@ -1,0 +1,92 @@
+lacture 27/09
+
+First step 
+1. created file index.js
+2. npm init (to setup our projet)
+
+second step =>To run our express server but before that we need to instal that
+3. npm install express
+     we started our server after that bu doing
+       i. const express = require('express');
+      ii. const port = 8000;
+     iii. const app = express();
+      iv. app.listen(port,function(err){
+             if(err){
+                 console.log('Error in Running the server', err);
+             }
+                 console.log('server is up and running on port: ',port);
+            });
+
+ Now we have setup our server our next step was sending data from our server to html i.e.  ejs file(here)
+ For that we have gone though lot of view engine like handlebar,pug ,ejs and multiple more
+ We choosed ejs because it  similar to writing js and the html remains the same
+
+4.npm install ejs
+
+5. app.set('view engine' , 'ejs'); /*used ejs as view engine*/
+
+6. app.set('views',path.join(__dirname,'views')); /*where to look out for views here it is current directory views folder*/
+
+AFTER SETTING THE views we need to create a views file i.e. with extension ejs this file will render the html
+7. home.ejs created in views
+        div>
+            <ul>
+                <%for(let i of contact_list){%>
+                    <li>
+                        <b><%=i.name%></b>
+                        <p><%=i.phone%></p>
+                    </li>
+                <%}%>
+            </ul>
+        </div>
+
+
+8.we render our data using app.get '/' is our route and function(req,res) is our controller function
+ so when '/' this route is encauntered this function(req,res) is called and whatever it returns it sent back tothe browser
+ if it returns anything if it doesnot return it wont be sent back to the browser
+
+
+**********app.get('/',function(req,res){
+
+
+    /*res.render('home' means it will automatically goes to the views folder which we have already mentionde earlier while
+    setting path of views i.e. app.set('views',path.join(__dirname,'views')); and it will find home.ejs
+    and pass on the data inside it i.e. title: "contact list",contact_list:contactList  these keys to res.locals and 
+    since locals are globals we can access it there in ejs file*/
+  return res.render('home',{
+        title: "contact list",
+        contact_list:contactList 
+       
+    });
+});
+
+9.
+We setup our middlewere to read a request from the post
+form is in home.ejs file  be 
+
+<form action="./create-contact" method="POST">
+            <input type="text" name="name" placeholder="Enter Name" required><%/*name attribute is uded for naming the keys of the data which need to be sent here key will be name*/%>
+            <input type="number" name="phone" placeholder="Enter ph Number" required><%/*name attribute is uded for naming the keys of the data which need to be sent here key will be phone*/%>
+            <button type="submit">Add contact</button><%/we can use input type submit or we can use button here we are using button*/%>
+            <% /*when we press the submit button it goes to the action Route then it gets redirected*/%>
+        </form>
+
+because we cant read or see the data in
+*******app.post('/create-contact',function(req,res){
+    contactList.push(req.body);
+   res.redirect('back');
+});
+
+we created middleware for that so that it parses that in req.body
+
+*******app.use(express.urlencoded());
+
+10. For Static file
+
+****** app.use(express.static('assets'));
+it tells express or our app that go back and look into the assets folder whenever a static file is being needed
+and it is found over there if there is a relative link
+relative link=> when  we said the path is root/css/home.css ==> href="./css/home.css"
+it will go to assets it will search for css..similar for js and images
+
+it will go there search the file and give it 

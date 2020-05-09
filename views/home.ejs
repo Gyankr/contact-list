@@ -1,0 +1,70 @@
+<html>
+    
+    <head>
+        
+        <title>
+            <%= title%>
+        </title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+           <link rel="stylesheet" href="./css/home.css">
+            <% /*   "/css"  this means to the very root of assets folder
+            and this assets folder called in index.js i.e middleware-- app.use(express.static('assets')); 
+            so it is known that static folder is in assets and we have to look css file there*/%>
+    </head>
+    <body>
+        <h1 id="page-heading">
+            <i class="fa fa-address-card"></i>
+            My contacts
+        </h1>
+        <div id ="contact-list-container">
+            <ul>
+                <%for(let i of contact_list){%>
+                    <li class="contact"> 
+                        <div class="details">
+                        <p><b><%=i.name%></b></p>
+                        <p><%=i.phone%></p>
+                        </div>
+                        <div class="delete-button">
+                            <%/* a tag when clicked sends a get request by default, when clicked it will call the route /controller
+                         --> delete-contact/9694363743  the phone will be passed whose div it is clicked*/%>
+                            <a href="/delete-contact/?phone=<%= i.phone%> ">
+                                 
+                                <i class="fa fa-window-close"></i>
+                            </a>
+                           
+                             
+                        </div>
+                    </li>
+                <%}%>
+            </ul>
+        </div>
+
+        <form id ="new-contact-form" action="./create-contact" method="POST">
+            <input type="text" name="name" placeholder="Enter Name" required><%/*name attribute is uded for naming the keys of the data which need to be sent here key will be name*/%>
+            <input type="number" name="phone" placeholder="Enter ph Number" required><%/*name attribute is uded for naming the keys of the data which need to be sent here key will be phone*/%>
+            <button type="submit">Add</button><%/we can use input type submit or we can use button here we are using button*/%>
+            <% /*when we press the submit button it goes to the action Route then it gets redirected*/%>
+        </form>
+       
+        <% for(let i =1;i<11; i++){ %>  <%/*Because we are writing js so inclosed it within aligator mouth with %   */%>
+            <li>
+                <b><i><%=i%></i></b>
+            </li>
+        <%}%>   <%/*Because we are writing js so inclosed it within aligator mouth with %   */%>
+
+        <%if(true){%>
+            <h1>This is in True block</h1>
+            <%}else{%>
+                <p>It is in False block</p>
+            <%}%>
+
+           
+            <script type="text/javascript" src="/js/home.js"></script>
+            <% /*   "/js"  this means to the very root of assets folder
+            and this assets folder called in index.js i.e middleware-- app.use(express.static('assets')); 
+            so it is known that static folder is in assets and we have to look css file there*/%>
+            
+    </body>
+</html>
