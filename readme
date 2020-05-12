@@ -99,3 +99,11 @@ npm install mongoose(in every package)
 we need to create another folder inside contact list and we call it 
 ****(folder) ==>config
 and file indside it called ==>mongoose.js
+
+**********************Using Robo 3T*****************
+once robo 3t is opened
+1.click to reate on top left
+2. name it anything
+3.click save
+4.click connect 
+

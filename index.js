@@ -2,8 +2,10 @@ const express = require('express');/*importing express*/
 const path = require('path');/*path is an inbuilt module in node*/
 const port = 8000;
 
-/*includ.require the mongoose.js file when the server is firing up*/
+/*includ.require  the  mongoose.js file when the server is firing up*/
 const db = require('./config/mongoose');
+
+const Contact  = require('./models/contact');
 
 const app = express();
 /*the express app will be fired using this command*/
@@ -45,20 +47,20 @@ app.use(express.static('assets'));
  In above line static('assets') it is assets folder from where we will access static file*/
 
 
-var contactList = [
-    {
-        name:"Toni Stark",/*key value pair*/
-        phone:"9693727335"/*key value pair*/
-    },
-    {
-        name: " Bhakua airtel",/*key value pair*/
-        phone: "9570018853"/*key value pair*/
-    },
-    {
-        name: "Bania jio",/*key value pair*/
-        phone:"8298042196"/*key value pair*/
-    }
-]
+// var contactList = [
+//     {
+//         name:"Toni Stark",/*key value pair*/
+//         phone:"9693727335"/*key value pair*/
+//     },
+//     {
+//         name: " Bhakua airtel",/*key value pair*/
+//         phone: "9570018853"/*key value pair*/
+//     },
+//     {
+//         name: "Bania jio",/*key value pair*/
+//         phone:"8298042196"/*key value pair*/
+//     }
+// ]
 
 /*app.get instead of multiple switch cases earlier*/
 /*1.get type request means i want to fetch some data from the db*/
@@ -68,6 +70,27 @@ var contactList = [
  and some data are missing then we use put request */
  /*4.delete request is used when we want to delete some data*/
 app.get('/',function(req,res){
+
+    /*fatChing the ContaCts from mongodb using funCtion find*/
+    /*we need to find all the ContaCts so we are leaving it as blank i.e. in find ({}, ) the is empty bCoz we need evrything*/
+    Contact.find({}/*we Can write {name:"Bania"} for query the data*/,function(err,contacts/*any name*/){
+        /*in Case of error*/
+        if(err){
+            console.log('Error in fatChing ContaCts from db index.js line 77');
+            return;
+        }
+        /*in Case it is seCussfully read the ContaCt from db then */
+        return res.render('home',{
+            title: "contact list",/*key value pair*/
+            /*the title and contact_list will be sent to home.ejs in views folder home.ejs*/
+            contact_list:contacts/*same name passed in the funCtion passed after err whiCh is Commented as anyname here */
+            /*key value pair*/
+        });
+    });
+    /*fatChing using mongodb*/
+
+
+
     //console.log(__dirname);/*this will print the current directory in console*/
 
     /*res.send is similar to earlier res.end*/
@@ -75,12 +98,12 @@ app.get('/',function(req,res){
 
     /*return res.render('home'); will go inside the views folde find the home file and give it to browser*/
    // return res.render('home');/*this means we are rendering from the view whith file name home in the views folder*/ 
-    return res.render('home',{
-        title: "contact list",/*key value pair*/
-        /*the title and contact_list will be sent to home.ejs in views folder home.ejs*/
-        contact_list:contactList 
-        /*key value pair*/
-    });
+    // return res.render('home',{
+    //     title: "contact list",/*key value pair*/
+    //     /*the title and contact_list will be sent to home.ejs in views folder home.ejs*/
+    //     contact_list:contactList 
+    //     /*key value pair*/
+    // });
 });
 
 app.get('/practice',function(req,res){
@@ -96,9 +119,31 @@ app.post('/create-contact',function(req,res){
     //     name:req.body.name,
     //     phone:req.body.phone
     // })
-    contactList.push(req.body);
+    /*pushing to  RAM*/
+   // contactList.push(req.body);
+
+   /*putting those form data into the db*/
+   Contact.create({
+    name :req.body.name,
+    phone:req.body.phone
+   },
+   /* we can also replace { name :req.body.name,phone:req.body.phone} the above line with req.body */ 
+   /*whenever we have created something we need to wrie a call back an function
+     weather any error is there or has it been created if created then we need to access that */
+    function(err,newContact){
+        /*(err,newContact) newContact  Can be named anything we want to name it*/
+       if(err){
+           console.log('error in creating a contact!!!');
+            return;}
+
+            /*to cleck weather a contact is creaded we are showing it on console*/
+            console.log('*************',newContact);
+            /*if contact has been created*/
+            return res.redirect('back');
+   });
+
    //res.redirect('./')
-   res.redirect('back');
+   //res.redirect('back');
    /* because it is comming to same page*/
 });
 
@@ -118,11 +163,26 @@ app.post('/create-contact',function(req,res){
      for using it like we did in above controller for deleting the contact*/
 /*this is how we do with query param when passed through ejs file*/
 app.get('/delete-contact/',function(req,res){
-    // console.log(req.query);
-    let phone = req.query.phone;
-    /*in the array of contactList findIndex in the js function it will iterate over each item in the array here contact mentioned below Will be each item
-    one by one and contact.phone==phone will find the index when it matches and return the index if it matches if not then it will return -1 */
-    let contacIndex = contactList.findIndex(contact=>contact.phone==phone);
+    /*Get the id from query in he url */
+        let id = req.query.id;
+
+     /*find the contact in the db using id and delete  */
+     Contact.findByIdAndDelete(id,function(err){
+         if(err){
+            console.log('Error i deleting the ContaCt');
+            return;
+         }
+         /* we are deleting something so we get only error and suCCess means it is deleted and we dont need to do anything for suCCess*/
+     });
+     return res.redirect('back');
+     /*deleting from mongodb ends here*/
+
+
+    // // console.log(req.query);
+    // let phone = req.query.phone;
+    // /*in the array of contactList findIndex in the js function it will iterate over each item in the array here contact mentioned below Will be each item
+    // one by one and contact.phone==phone will find the index when it matches and return the index if it matches if not then it will return -1 */
+    // let contacIndex = contactList.findIndex(contact=>contact.phone==phone);
 
 /*Brief explanation about arrow function below
 
@@ -144,10 +204,10 @@ console.log(prices); // [649, 576, 489]\
 
 Both are same */
 
-    if(contacIndex!=-1){
-        contactList.splice(contacIndex,1);
-    }
-    return res.redirect('back');
+    // if(contacIndex!=-1){
+    //     contactList.splice(contacIndex,1);
+    // }
+    // return res.redirect('back');
 });
 
 
